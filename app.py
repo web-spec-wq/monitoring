@@ -14,10 +14,12 @@ REQUEST_LATENCY_HIST = Histogram("flask_request_latency_seconds", "Request laten
 REQUEST_SUMMARY = Summary("flask_request_summary_seconds", "Summary of request processing time", ['endpoint'])
 USER_REGISTRATION_GAUGE = Gauge("registered_users_total", "Total registered users")
 
+
 @app.before_request
 def before_request():
     request.start_time = time.time()
     INPROGRESS_GAUGE.inc()
+
 
 @app.after_request
 def after_request(response):
@@ -28,9 +30,11 @@ def after_request(response):
     INPROGRESS_GAUGE.dec()
     return response
 
+
 @app.route("/")
 def index():
     return render_template("register.html", users=users)
+
 
 @app.route("/register", methods=["POST"])
 def register():
@@ -40,6 +44,7 @@ def register():
         users.append({"name": name, "email": email})
         USER_REGISTRATION_GAUGE.set(len(users))
     return redirect(url_for("index"))
+
 
 @app.route("/metrics")
 def metrics():
