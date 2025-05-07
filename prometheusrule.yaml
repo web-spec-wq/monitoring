@@ -1,0 +1,30 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: alert-rules
+  namespace: python-monitoring
+  labels:
+    release: prometheus-stack  # Must match your Prometheus CR
+spec:
+  groups:
+  - name: button.rules
+    rules:
+    - alert: HighButtonClicks
+      expr: increase(button_clicks_total{namespace="python-monitoring"}[5m]) > 10
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High number of button clicks"
+        description: "More than 10 button clicks in the last 5 minutes."
+
+  - name: pod-crash.rules
+    rules:
+    - alert: PodCrashLoopDetected
+      expr: increase(kube_pod_container_status_restarts_total{namespace="default"}[5m]) >= 1
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Pod Crash Detected"
+        description: "Container in pod is restarting frequently in the 'default' namespace."
