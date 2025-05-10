@@ -28,7 +28,7 @@ spec:
           # - Each init container must complete successfully before the next one starts.
       containers:
       - name: user-registration-app
-        image: 
+        image: shrutichittora49/monitoring:v202505101743
         imagePullPolicy: IfNotPresent
         resources:
           requests:
