@@ -65,13 +65,18 @@ jobs:
         git config --local user.name "Shruti"
         git config --local user.email "shrutichittora49@gmail.com"
     - name: Commit changes
-      run: |
+      run: | 
+        git fetch origin workflow/integration
+        git checkout -B workflow/integration origin/workflow/integration || git checkout -b workflow/integration
+
+
         git add manifests/app-deployment.yaml
-        git commit -m "Updated image version to $VERSION"
+        git commit -m "Updated image version to $VERSION" || echo "No changes to commit"
     # Push the changes to the branch
     - name: Push changes
       run: |
-        git checkout -b workflow/integration
+        git pull --rebase origin workflow/integration || echo "Nothing to pull"
+
         git push origin workflow/integration
 
       
