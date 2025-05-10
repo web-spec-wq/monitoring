@@ -55,7 +55,21 @@ jobs:
     - name: Push Docker image
       run: |
         docker push ${{ secrets.Docker_USERNAME }}/monitoring:$VERSION
-  
 
+    - name: Deploy to Kubernetes
+      run: |
+        sed -i "s/image: shrutichittora49/monitoring:.*/image: shrutichittora49/monitoring:$VERSION/g" manifests/app-deployment.yaml
+        
+    - name: Setup Git
+      run: |
+        git config --local user.name "Shruti"
+        git config --local user.email "shrutichittora49@gmail.com"
+    - name: Commit changes
+      run: |
+        git add manifests/app-deployment.yaml
+        git commit -m "Updated image version to $VERSION"
+    - name: Push changes
+      run: |
+        git push origin workflow/integration
 
  
