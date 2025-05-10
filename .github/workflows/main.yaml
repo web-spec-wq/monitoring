@@ -64,6 +64,7 @@ jobs:
       run: |
         git config --local user.name "Shruti"
         git config --local user.email "shrutichittora49@gmail.com"
+      # Checkout the branch and fetch the latest changes
     - name: Commit changes
       run: | 
         git fetch origin workflow/integration
