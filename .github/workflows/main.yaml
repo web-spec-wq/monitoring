@@ -71,6 +71,7 @@ jobs:
     # Push the changes to the branch
     - name: Push changes
       run: |
+        git checkout -b workflow/integration
         git push origin workflow/integration
 
       
