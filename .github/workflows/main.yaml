@@ -5,6 +5,7 @@ name: Monitoring workflow
 on:
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 jobs:
   test-build:
     # runner: ubuntu-latest
@@ -14,7 +15,7 @@ jobs:
     steps:
     # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Checkout code 
-      uses: actions/checkout@v2         
+      uses: actions/checkout@v2
     - name: Set up Python 3.10
       uses: actions/setup-python@v2
       with:
@@ -59,6 +60,7 @@ jobs:
     # This job runs only if the previous job was successful
     # runner: ubuntu-latest
     runs-on: ubuntu-latest
+    # environment variables
     env:
       VERSION: ${{ needs.test-build.outputs.version }}
         
@@ -88,8 +90,12 @@ jobs:
       # Checkout the branch and fetch the latest changes
     - name: Commit changes
       run: | 
+        echo "branch_name=${{ github.head_ref }}" >> $GITHUB_ENV
+        echo "branch=${{ github.ref_name }}" >> $GITHUB_ENV
         git fetch origin workflow/integration
         git checkout -B workflow/integration origin/workflow/integration || git checkout -b workflow/integration
+        echo "branch_name=${{ github.head_ref }}" >> $GITHUB_ENV
+        echo "branch=${{ github.ref_name }}" >> $GITHUB_ENV
         git add manifests/app-deployment.yaml
         git commit -m "Updated image version to $VERSION" || echo "No changes to commit"
     # Push the changes to the branch
