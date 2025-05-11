@@ -9,6 +9,8 @@ jobs:
   test-build:
     # runner: ubuntu-latest
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     steps:
     # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Checkout code 
@@ -42,14 +44,14 @@ jobs:
       run: |
         VERSION=v$(date +%Y%m%d%H%M)
         echo "VERSION=$VERSION" >> $GITHUB_ENV
-        echo "::set-output name=version::$VERSION"
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
     - name: Build Docker image
       run: |
-        docker build -t ${{ secrets.Docker_USERNAME }}/monitoring:$VERSION .
+        docker build -t ${{ secrets.Docker_USERNAME }}/monitoring:${{ env.VERSION }} .
     # Push the docker image to Docker Hub
     - name: Push Docker image
       run: |
-        docker push ${{ secrets.Docker_USERNAME }}/monitoring:$VERSION
+        docker push ${{ secrets.Docker_USERNAME }}/monitoring:${{ env.VERSION }}
   # This workflow will deploy the docker image to Kubernetes
   # For more information see: https://docs.github.com/en/actions/deployment/deploying-to-your-cloud-provider/deploying-to-kubernetes
   deploy:
@@ -57,6 +59,9 @@ jobs:
     # This job runs only if the previous job was successful
     # runner: ubuntu-latest
     runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.test-build.outputs.version }}
+        
     steps:
     # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Checkout code 
@@ -67,14 +72,14 @@ jobs:
         python-version: "3.10"
     - name: set up Docker Buildx
       uses: docker/setup-buildx-action@v2
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flask prometheus_client pytest
-        pip install flake8
+    # - name: Install dependencies
+    #   run: |
+    #     python -m pip install --upgrade pip
+    #     pip install flask prometheus_client pytest
+    #     pip install flake8
     - name: Deploy to Kubernetes
       run: |
-        sed -i "s|image: shrutichittora49/monitoring:.*|image: shrutichittora49/monitoring:${{env.VERSION}}|g" manifests/app-deployment.yaml
+        sed -i "s|image: shrutichittora49/monitoring:.*|image: shrutichittora49/monitoring:${{ env.VERSION }}|g" manifests/app-deployment.yaml
     # setup git and commit the changes        
     - name: Setup Git
       run: |
