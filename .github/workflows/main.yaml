@@ -88,7 +88,6 @@ jobs:
       # Checkout the branch and fetch the latest changes
     - name: Commit changes
       run: | 
-        git fetch origin workflow/integration
         git checkout -B workflow/integration origin/workflow/integration || git checkout -b workflow/integration
         git add manifests/app-deployment.yaml
         git commit -m "Updated image version to $VERSION" || echo "No changes to commit"
@@ -98,7 +97,6 @@ jobs:
     # This is to avoid the error: "error: failed to push some refs to 'origin'"
     - name: Push changes
       run: |
-        git pull --rebase origin workflow/integration || echo "Nothing to pull"
         git push origin workflow/integration
 
 
