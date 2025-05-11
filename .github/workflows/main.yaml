@@ -42,6 +42,7 @@ jobs:
       run: |
         VERSION=v$(date +%Y%m%d%H%M)
         echo "VERSION=$VERSION" >> $GITHUB_ENV
+        echo "::set-output name=version::$VERSION"
     - name: Build Docker image
       run: |
         docker build -t ${{ secrets.Docker_USERNAME }}/monitoring:$VERSION .
@@ -73,7 +74,7 @@ jobs:
         pip install flake8
     - name: Deploy to Kubernetes
       run: |
-        sed -i "s|image: shrutichittora49/monitoring:.*|image: shrutichittora49/monitoring:$VERSION|g" manifests/app-deployment.yaml
+        sed -i "s|image: shrutichittora49/monitoring:.*|image: shrutichittora49/monitoring:${{env.VERSION}}|g" manifests/app-deployment.yaml
     # setup git and commit the changes        
     - name: Setup Git
       run: |
@@ -87,10 +88,14 @@ jobs:
         git add manifests/app-deployment.yaml
         git commit -m "Updated image version to $VERSION" || echo "No changes to commit"
     # Push the changes to the branch
+    # We need to pull the latest changes from the branch before pushing-- as we are committing the changes, so to consider the latest changes
+    # from the branch, we need to pull the latest changes from the branch before pushing
+    # This is to avoid the error: "error: failed to push some refs to 'origin'"
     - name: Push changes
       run: |
         git pull --rebase origin workflow/integration || echo "Nothing to pull"
         git push origin workflow/integration
+
 
       
 
