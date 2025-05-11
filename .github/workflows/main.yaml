@@ -93,7 +93,7 @@ jobs:
         git add manifests/app-deployment.yaml
         git commit -m "Updated image version to $VERSION" || echo "No changes to commit"
     # Push the changes to the branch
-    # We need to pull the latest changes from the branch before pushing-- as we are committing the changes, so to consider the latest changes
+    # As we are committing the changes, so to consider the latest changes
     # from the branch, we need to pull the latest changes from the branch before pushing
     # This is to avoid the error: "error: failed to push some refs to 'origin'"
     - name: Push changes
