@@ -24,7 +24,7 @@ jobs:
         id: check-skip-ci
         run: |
           echo "Checking for [skip ci] or [ci skip] in commit message"
-          msg="${{ git log -1 --pretty=%B }}"
+          msg="$(git log -1 --pretty=%B)"
           echo "Commit message: $msg"
           if [[ "$msg" == *"[skip ci]"* || "$msg" == *"[ci skip]"* ]]; then
             echo "Skipping workflow"
