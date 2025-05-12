@@ -18,11 +18,13 @@ jobs:
     outputs:
       skip: ${{ steps.check-skip-ci.outputs.skip }}
     steps:
+      - name: Checkout code 
+        uses: actions/checkout@v2
       - name: Check for [skip ci] or [ci skip]
         id: check-skip-ci
         run: |
           echo "Checking for [skip ci] or [ci skip] in commit message"
-          msg="${{ github.event.head_commit.message }}"
+          msg="${{ git log -1 --pretty=%B }}"
           echo "Commit message: $msg"
           if [[ "$msg" == *"[skip ci]"* || "$msg" == *"[ci skip]"* ]]; then
             echo "Skipping workflow"
