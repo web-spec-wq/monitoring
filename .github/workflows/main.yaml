@@ -67,7 +67,9 @@ jobs:
     steps:
     # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Checkout code 
-      uses: actions/checkout@v2         
+      uses: actions/checkout@v2 
+      with:
+        fetch-depth: 0        
     - name: Set up Python 3.10
       uses: actions/setup-python@v2
       with:
@@ -92,10 +94,12 @@ jobs:
       run: | 
         echo "branch_name=${{ github.head_ref }}" >> $GITHUB_ENV
         echo "branch=${{ github.ref_name }}" >> $GITHUB_ENV
+        git log --oneline
         git fetch origin workflow/integration
         git checkout -B workflow/integration origin/workflow/integration || git checkout -b workflow/integration
         echo "branch_name=${{ github.head_ref }}" >> $GITHUB_ENV
         echo "branch=${{ github.ref_name }}" >> $GITHUB_ENV
+        git log --oneline
         git add manifests/app-deployment.yaml
         git commit -m "Updated image version to $VERSION" || echo "No changes to commit"
     # Push the changes to the branch
@@ -106,10 +110,12 @@ jobs:
       run: |
         echo "branch_name=${{ github.head_ref }}" >> $GITHUB_ENV
         echo "branch=${{ github.ref_name }}" >> $GITHUB_ENV
+        git log --oneline
         git pull --rebase origin workflow/integration || echo "Nothing to pull"
         echo "branch_name=${{ github.head_ref }}" >> $GITHUB_ENV
         echo "branch=${{ github.ref_name }}" >> $GITHUB_ENV
         git push origin workflow/integration
+        git log --oneline
 
 
       
