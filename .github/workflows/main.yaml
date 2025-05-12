@@ -3,7 +3,7 @@
 
 name: Monitoring workflow
 on:
-  # This workflow is triggered on pull request to the main branch
+  # This workflow is triggered on pull request to the main
   pull_request:
     types:
       - opened           # when a pull-request is opened
