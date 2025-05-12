@@ -6,7 +6,7 @@ on:
   # This workflow is triggered on pull request to the main branch
   pull_request:
     types:
-      - opened           # when a pull request is opened
+      - opened           # when a pull-request is opened
     branches:
       - main 
   workflow_dispatch:  
