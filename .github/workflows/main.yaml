@@ -104,7 +104,11 @@ jobs:
     # This is to avoid the error: "error: failed to push some refs to 'origin'"
     - name: Push changes
       run: |
+        echo "branch_name=${{ github.head_ref }}" >> $GITHUB_ENV
+        echo "branch=${{ github.ref_name }}" >> $GITHUB_ENV
         git pull --rebase origin workflow/integration || echo "Nothing to pull"
+        echo "branch_name=${{ github.head_ref }}" >> $GITHUB_ENV
+        echo "branch=${{ github.ref_name }}" >> $GITHUB_ENV
         git push origin workflow/integration
 
 
