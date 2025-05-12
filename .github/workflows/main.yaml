@@ -11,7 +11,29 @@ on:
       - main 
   workflow_dispatch:  
 jobs:
+  check-skip-ci:
+    # This job checks if the commit message contains [skip ci] or [ci skip]
+    # If it does, it will skip the workflow
+    runs-on: ubuntu-latest
+    outputs:
+      skip: ${{ steps.check-skip-ci.outputs.skip }}
+    steps:
+      - name: Check for [skip ci] or [ci skip]
+        id: check-skip-ci
+        run: |
+          echo "Checking for [skip ci] or [ci skip] in commit message"
+          msg="${{ github.event.head_commit.message }}"
+          echo "Commit message: $msg"
+          if [[ "$msg" == *"[skip ci]"* || "$msg" == *"[ci skip]"* ]]; then
+            echo "Skipping workflow"
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "Running workflow"
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
   test-build:
+    needs: check-skip-ci
+    if: needs.check-skip-ci.outputs.skip == 'false'
     # runner: ubuntu-latest
     runs-on: ubuntu-latest
     outputs:
@@ -62,7 +84,11 @@ jobs:
   # This workflow will deploy the docker image to Kubernetes
   # For more information see: https://docs.github.com/en/actions/deployment/deploying-to-your-cloud-provider/deploying-to-kubernetes
   deploy:
-    needs: test-build
+    needs:
+      - test-build
+      - check-skip-ci
+    
+    if: needs.check-skip-ci.outputs.skip == 'false'
     # This job runs only if the previous job was successful
     # runner: ubuntu-latest
     runs-on: ubuntu-latest
