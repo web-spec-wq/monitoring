@@ -9,8 +9,6 @@ on:
       - opened           # when a pull request is opened
     branches:
       - main 
-    paths-ignore:
-      - .github/workflows/main.yaml
   workflow_dispatch:
   
 jobs:
