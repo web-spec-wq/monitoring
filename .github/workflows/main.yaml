@@ -6,7 +6,7 @@ on:
   # This workflow is triggered on pull request to the main branch
   pull_request:
     types:
-      - opened           # when a pull request is opened
+      - opened           # when a pull-request is opened
     branches:
       - main 
   workflow_dispatch:  
@@ -24,7 +24,7 @@ jobs:
         id: check-skip-ci
         run: |
           echo "Checking for [skip ci] or [ci skip] in commit message"
-          msg="${{ git log -1 --pretty=%B }}"
+          msg="$(git log -1 --pretty=%B)"
           echo "Commit message: $msg"
           if [[ "$msg" == *"[skip ci]"* || "$msg" == *"[ci skip]"* ]]; then
             echo "Skipping workflow"
