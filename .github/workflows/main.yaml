@@ -173,4 +173,3 @@ jobs:
           echo "Commit message: ${{ github.event.head_commit.message }}"
           echo "Branch: ${{ github.ref_name }}"
           echo "Workflow run ID: ${{ github.run_id }}"
-          echo "Workflow run URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
