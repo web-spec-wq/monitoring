@@ -11,6 +11,7 @@ on:
     branches:
       - main 
   workflow_dispatch:  
+  
 jobs:
   check-skip-ci:
     # This job checks if the commit message contains [skip ci] or [ci skip]
@@ -49,6 +50,7 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: "3.10"
+        # cache: 'pip'
     # This step sets up Docker Buildx, which is a Docker CLI plugin for extended build capabilities with BuildKit
     - name: set up Docker Buildx
       uses: docker/setup-buildx-action@v2
@@ -74,7 +76,8 @@ jobs:
     - name: Docker tag
       id: version
       run: |
-        VERSION=v$(date +%Y%m%d%H%M)
+        # Get the current date and time in the format YYYYMMDDHHMM
+        VERSION="v$(date +%Y%m%d%H%M)"
         echo "VERSION=$VERSION" >> $GITHUB_ENV
         echo "version=$VERSION" >> $GITHUB_OUTPUT
     - name: Build Docker image
@@ -91,13 +94,17 @@ jobs:
       - test-build
       - check-skip-ci
     
-    if: needs.check-skip-ci.outputs.skip == 'false'
+    
+    if: sucess() && needs.check-skip-ci.outputs.skip == 'false'
+  
     # This job runs only if the previous job was successful
     # runner: ubuntu-latest
     runs-on: ubuntu-latest
-    # environment variables
+    # environment variables avaiable to all steps in this job only
     env:
       VERSION: ${{ needs.test-build.outputs.version }}
+
+
         
     steps:
     # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -155,4 +162,15 @@ jobs:
 
       
 
- 
+  report:
+    runs-on: ubuntu-latest
+    if: failure() || needs.check-skip-ci.outputs.skip == 'false'
+    steps:
+      - name: Output information
+        run: |
+          echo "This workflow has failed or was skipped."
+          echo "Check the logs for more information."
+          echo "Commit message: ${{ github.event.head_commit.message }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Workflow run ID: ${{ github.run_id }}"
+          echo "Workflow run URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
