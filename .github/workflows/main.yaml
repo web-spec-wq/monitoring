@@ -166,8 +166,8 @@ jobs:
       - deploy
       - check-skip-ci
      # This job runs only if the previous jobs failed or were skipped 
-    if: needs.test-build.results == 'failure' || needs.deploy.results == 'failure' || needs.check-skip-ci.outputs.skip == 'true'
-
+    if: needs.test-build.result == 'failure' || needs.deploy.result == 'failure' || needs.check-skip-ci.outputs.skip == 'true'
+    # This job runs on the latest Ubuntu runner
     runs-on: ubuntu-latest
     steps:
       - name: Output information
