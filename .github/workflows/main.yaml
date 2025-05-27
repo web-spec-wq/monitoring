@@ -109,9 +109,7 @@ jobs:
     steps:
     # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Checkout code 
-      uses: actions/checkout@v2 
-      with:
-        fetch-depth: 0        
+      uses: actions/checkout@v2        
     - name: Set up Python 3.10
       uses: actions/setup-python@v2
       with:
@@ -163,7 +161,10 @@ jobs:
       
 
   report:
-    needs: [test-build, deploy, check-skip-ci]
+    needs:
+      - test-build
+      - deploy
+      - check-skip-ci
     if: failure() || needs.check-skip-ci.outputs.skip == 'false'
 
     runs-on: ubuntu-latest
