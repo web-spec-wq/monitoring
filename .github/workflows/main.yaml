@@ -48,6 +48,7 @@ jobs:
       run: |
         echo "Simulating a failure..."
         exit 1
+      continue-on-error: true
 
     - name: Checkout code 
       uses: actions/checkout@v2
