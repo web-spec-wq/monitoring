@@ -95,7 +95,7 @@ jobs:
       - check-skip-ci
     
     
-    if: sucess() && needs.check-skip-ci.outputs.skip == 'false'
+    if: success() && needs.check-skip-ci.outputs.skip == 'false'
   
     # This job runs only if the previous job was successful
     # runner: ubuntu-latest
@@ -163,8 +163,10 @@ jobs:
       
 
   report:
-    runs-on: ubuntu-latest
+    needs: [test-build, deploy, check-skip-ci]
     if: failure() || needs.check-skip-ci.outputs.skip == 'false'
+
+    runs-on: ubuntu-latest
     steps:
       - name: Output information
         run: |
