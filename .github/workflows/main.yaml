@@ -166,13 +166,13 @@ jobs:
       - deploy
       - check-skip-ci
      # This job runs only if the previous jobs failed or were skipped 
-    if: needs.test-build.result == 'failure' || needs.deploy.result == 'failure' || needs.check-skip-ci.outputs.skip == 'true'
+    if: failure()
     # This job runs on the latest Ubuntu runner
     runs-on: ubuntu-latest
     steps:
       - name: Output information
         run: |
-          echo "This workflow has failed or was skipped."
+          echo "This workflow has failed"
           echo "Check the logs for more information."
           echo "Commit message: ${{ github.event.head_commit.message }}"
           echo "Branch: ${{ github.ref_name }}"
