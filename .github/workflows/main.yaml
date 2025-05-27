@@ -165,7 +165,7 @@ jobs:
       - test-build
       - deploy
       - check-skip-ci
-    if: failure() || needs.check-skip-ci.outputs.skip == 'false'
+    if: failure() || needs.check-skip-ci.outputs.skip == 'true'
 
     runs-on: ubuntu-latest
     steps:
