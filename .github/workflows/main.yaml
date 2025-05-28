@@ -44,6 +44,12 @@ jobs:
       version: ${{ steps.version.outputs.version }}
     steps:
     # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - name: Simulate failure
+      run: |
+        echo "Simulating a failure..."
+        exit 1
+      continue-on-error: true
+
     - name: Checkout code 
       uses: actions/checkout@v2
     - name: Set up Python 3.10
