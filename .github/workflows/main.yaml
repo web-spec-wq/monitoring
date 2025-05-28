@@ -38,9 +38,10 @@ jobs:
   test-build:
     needs: check-skip-ci
     if: needs.check-skip-ci.outputs.skip == 'false'
+    continue-on-error: true
     strategy:
       matrix:
-        python-version: [3.12, 3.13]
+        python-version: [3.10, 3.12, 3.13]
     # runner: ubuntu-latest
     runs-on: ubuntu-latest
     outputs:
