@@ -38,7 +38,7 @@ jobs:
   test-build:
     needs: check-skip-ci
     if: needs.check-skip-ci.outputs.skip == 'false'
-    continue-on-error: true
+    
     strategy:
       matrix:
         python-version: [3.12, 3.13]
@@ -52,6 +52,7 @@ jobs:
       run: |
         echo "Simulating a failure..."
         exit 1
+      continue-on-error: true
      
 
     - name: Checkout code 
