@@ -1,0 +1,20 @@
+name: Setup python and docker buildx
+description: 'Setup python version and docker buildx for the workflow'
+inputs:
+  python-version:
+    description: 'Python version to set up'
+    # we will pass the python version as an input to the workflow
+    required: true
+    # default: '3.12'
+runs:
+  using: 'composite'
+  steps:
+  - name: Checkout code 
+    uses: actions/checkout@v2
+  - name: Set up Python 3.12
+    uses: actions/setup-python@v2
+    with:
+      python-version: ${{ inputs.python-version }}
+  # This step sets up Docker Buildx, which is a Docker CLI plugin for extended build capabilities with BuildKit
+  - name: set up Docker Buildx
+    uses: docker/setup-buildx-action@v2
