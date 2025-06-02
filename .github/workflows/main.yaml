@@ -24,7 +24,10 @@ jobs:
         uses: actions/checkout@v2
       - name: Check for [skip ci] or [ci skip]
         id: check-skip-ci
+        env:
+         username: ${{github.event.inputs.username}}
         run: |
+          echo "$username"
           echo "Checking for [skip ci] or [ci skip] in commit message"
           msg="$(git log -1 --pretty=%B)"
           echo "Commit message: $msg"
