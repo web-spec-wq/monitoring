@@ -10,7 +10,15 @@ on:
       - opened           # when a pull-request is opened
     branches:
       - main 
+    
   workflow_dispatch:  
+   inputs:
+      username:
+        description: 'GitHub username to check'
+        required: true
+        default: 'shrutichittora49'
+        type: string
+
   
 jobs:
   check-skip-ci:
