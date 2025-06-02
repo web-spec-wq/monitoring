@@ -53,6 +53,8 @@ jobs:
         echo "Simulating a failure..."
         exit 1
       continue-on-error: true
+    - name: Checkout code
+      uses: actions/checkout@v2
     - name: Setup Python and Docker buildx
       uses: ./.github/workflows/actions
       with:
