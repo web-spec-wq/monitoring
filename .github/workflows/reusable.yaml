@@ -6,22 +6,19 @@ on:
       description: 'Version of the Docker image to deploy'
       required: true
       type: string
-   
+
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code 
-      uses: actions/checkout@v2        
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v2
+    - name: Setup Python and Docker buildx
+      uses: ./.github/workflows/actions
       with:
-        python-version: "3.10"
-    - name: set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+        python-version: '3.12'
+
     - name: Deploy to Kubernetes
-      run: |
+      run: | 
         sed -i "s|image: shrutichittora49/monitoring:.*|image: shrutichittora49/monitoring:${{ inputs.version }}|g" manifests/app-deployment.yaml
     # setup git and commit the changes        
     - name: Setup Git
@@ -40,7 +37,7 @@ jobs:
         echo "branch=${{ github.ref_name }}" >> $GITHUB_ENV
         git log --oneline
         git add manifests/app-deployment.yaml
-        git commit -m "Updated image version to $VERSION" || echo "No changes to commit"
+        git commit -m "Updated image version to ${{inputs.version}}" || echo "No changes to commit"
     # Push the changes to the branch
     # As we are committing the changes, so to consider the latest changes
     # from the branch, we need to pull the latest changes from the branch before pushing
