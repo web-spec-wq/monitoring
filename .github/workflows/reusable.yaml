@@ -12,6 +12,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+    - name: checkout
+      uses: actions/checkout@v2
     - name: Setup Python and Docker buildx
       uses: ./.github/workflows/actions
       with:
