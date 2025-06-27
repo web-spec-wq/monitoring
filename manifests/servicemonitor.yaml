@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: user-registration-app
+    release: prometheus-stack
+  name: user-registration-servicemonitor
+  namespace: python-monitoring
+spec:
+  endpoints:
+    - interval: 2s
+      port: user-reg
+      path: /metrics
+  selector:
+    matchLabels:
+      app: user-registration-app
+  namespaceSelector:
+    matchNames:
+      - python-monitoring

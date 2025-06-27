@@ -4,13 +4,14 @@ kind: Service
 metadata:
   name: user-registration-app
   namespace: python-monitoring
+  labels: 
+    app: user-registration-app
 spec:
   selector:
     app: user-registration-app
-  type: NodePort
+  type: ClusterIP
   ports:
-  - name: user-registration-app
+  - name: user-reg
     port: 5000
     targetPort: 5000
-    nodePort: 30001
 ---

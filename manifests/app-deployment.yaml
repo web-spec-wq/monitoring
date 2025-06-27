@@ -40,7 +40,7 @@ spec:
 
         ports:
         - containerPort: 5000
-          name: user-registration-app
+          name: user-reg
 
       restartPolicy: Always
 
