@@ -1,0 +1,45 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: alert-rules
+  namespace: python-monitoring
+  labels:
+    release: prometheus-stack  # Must match your Prometheus CR
+spec:
+  groups:
+  - name: user-reg.rules
+    rules:
+    - alert: HighRequestLatency
+      expr: histogram_quantile(0.95, sum(rate(flask_request_latency_seconds_bucket{endpoint="/register"}[5m])) by (le)) > 1
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High request latency on user registration endpoint"
+        description: "95th percent latency on / is more than 1 sec for straight 1m."
+
+    - alert: TooManyPostRequests
+      expr: increase(flask_app_request_count_total{endpoint="/register"}[1m]) > 10
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Too many POST requests to /register"
+        description: "More than 5 POST requests/sec to /register endpoint for 2 minutes."
+        
+    - alert: NoUserRegistration
+      expr: increase(registered_users_total[10m]) == 0
+      for: 10m
+      labels:
+        severity: critical
+      annotations:
+        summary: "No new users registered"
+        description: "No user registrations have occurred in the past 10 minutes."
+    - alert: HighErrorRate
+      expr: sum(rate(flask_app_request_count_total{status_code=~"5.."}[5m])) / sum(rate(flask_app_request_count_total[5m])) > 0.05
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "High error rate detected"
+        description: "More than 5% of requests are returning server errors (5xx) in the last 5 minutes."
