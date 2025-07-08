@@ -9,19 +9,25 @@ metadata:
 spec:
   route:
     receiver: slack-notifications
+    groupBy:
+      - alertname
+      - namespace
     groupWait: 5s
     groupInterval: 10s
     repeatInterval: 1m
+
   receivers:
     - name: slack-notifications
       slackConfigs:
-        - apiURL:
-            name: alertmanager-slack-config
+        - channel: '#nzsaasops'
+          apiURL:
+            name: slack-secret
             key: webhook_url
-          channel: "#all-monitor"
           sendResolved: true
-          title: '{{ .CommonAnnotations.summary }}'
-          text: '{{ .CommonAnnotations.description }}'
-
-
-
+          text: |
+            *Alert:* {{ .CommonLabels.alertname }}
+            *Namespace:* {{ .CommonLabels.namespace }}
+            *Severity:* {{ .CommonLabels.severity | default "error" }}
+            *Summary:* {{ .CommonAnnotations.summary }}
+            *Description:* {{ .CommonAnnotations.description }}
+        

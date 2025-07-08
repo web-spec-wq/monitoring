@@ -10,16 +10,16 @@ spec:
   - name: user-reg.rules
     rules:
     - alert: HighRequestLatency
-      expr: histogram_quantile(0.95, sum(rate(flask_request_latency_seconds_bucket{endpoint="/register"}[5m])) by (le)) > 1
+      expr: histogram_quantile(0.95, sum(rate(flask_request_latency_seconds_bucket{endpoint="/register"}[5m])) by (le)) > 0.8
       for: 1m
       labels:
         severity: warning
       annotations:
         summary: "High request latency on user registration endpoint"
-        description: "95th percent latency on / is more than 1 sec for straight 1m."
+        description: "95th percent latency on / is more than 0.8 sec for straight 1m."
 
     - alert: TooManyPostRequests
-      expr: increase(flask_app_request_count_total{endpoint="/register"}[1m]) > 10
+      expr: increase(flask_app_request_count_total{endpoint="/register"}[2m]) > 5
       for: 1m
       labels:
         severity: warning
@@ -35,11 +35,11 @@ spec:
       annotations:
         summary: "No new users registered"
         description: "No user registrations have occurred in the past 10 minutes."
-    - alert: HighErrorRate
-      expr: sum(rate(flask_app_request_count_total{status_code=~"5.."}[5m])) / sum(rate(flask_app_request_count_total[5m])) > 0.05
-      for: 5m
+    - alert: Pods not running
+      expr: kube_pod_status_phase{phase!="Running"} > 0
+      for: 1m
       labels:
         severity: critical
       annotations:
-        summary: "High error rate detected"
-        description: "More than 5% of requests are returning server errors (5xx) in the last 5 minutes."
+        summary: "Pod {{ $labels.pod }} not in healthy state in {{ $labels.namespace }}"
+        description: "One or more pods are not in the Running state for more than 1 minutes."
