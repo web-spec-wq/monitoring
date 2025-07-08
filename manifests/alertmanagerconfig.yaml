@@ -27,7 +27,7 @@ spec:
           text: |
             *Alert:* {{ .CommonLabels.alertname }}
             *Namespace:* {{ .CommonLabels.namespace }}
-            *Severity:* {{ .CommonLabels.severity | default "error" }}
+            *Severity:* {{ .CommonLabels.severity }}
             *Summary:* {{ .CommonAnnotations.summary }}
             *Description:* {{ .CommonAnnotations.description }}
         
