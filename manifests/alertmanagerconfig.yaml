@@ -4,7 +4,7 @@ metadata:
   name: alertmanager-config
   namespace: python-monitoring
   labels:
-    release: prometheus-stack 
+    release: prometheus-stack
 spec:
   route:
     receiver: slack-notifications
@@ -17,11 +17,11 @@ spec:
   receivers:
     - name: slack-notifications
       slackConfigs:
-        - channel: '#social'
-          apiURL:
+        - apiURL:
             name: monitoring-secret
             key: webhook_url
             namespace: python-monitoring
+          channel: '#social'
           sendResolved: true
           text: |
             *Alert:* {{ .CommonLabels.alertname }}
