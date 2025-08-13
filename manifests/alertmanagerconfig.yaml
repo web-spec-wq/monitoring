@@ -19,7 +19,7 @@ spec:
   receivers:
     - name: slack-notifications
       slackConfigs:
-        - channel: '#nzsaasops'
+        - channel: '#social'
           apiURL:
             name: slack-secret
             key: webhook_url
