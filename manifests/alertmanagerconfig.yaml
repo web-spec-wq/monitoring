@@ -21,7 +21,7 @@ spec:
       slackConfigs:
         - channel: '#social'
           apiURL:
-            name: mon-secret
+            name: monitoring-secret
             key: webhook_url
           sendResolved: true
           text: |
