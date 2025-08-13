@@ -23,6 +23,7 @@ spec:
           apiURL:
             name: monitoring-secret
             key: webhook_url
+            namespace: python-monitoring
           sendResolved: true
           text: |
             *Alert:* {{ .CommonLabels.alertname }}
