@@ -20,9 +20,9 @@ spec:
     - name: slack-notifications
       slackConfigs:
         - channel: '#social'
-          apiURL:
-            name: slack-secret
-            key: webhook_url
+          # apiURL:
+          #   name: slack-secret
+          #   key: webhook_url
           sendResolved: true
           text: |
             *Alert:* {{ .CommonLabels.alertname }}
