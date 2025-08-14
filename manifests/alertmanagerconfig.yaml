@@ -13,7 +13,7 @@ spec:
       - namespace
     groupWait: 5s
     groupInterval: 10s
-    repeatInterval: 1m
+    repeatInterval: 2m
   receivers:
     - name: slack-notifications
       slackConfigs:
